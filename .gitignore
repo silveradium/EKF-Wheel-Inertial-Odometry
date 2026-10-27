@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# virtual environment
+.venv/
+
+# NCLT data (large, download it yourself, see README.md)
+NCLT/
+
+# macOS / editors
+.DS_Store
+.vscode/
+.idea/

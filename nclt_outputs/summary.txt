@@ -1,0 +1,29 @@
+calibration:
+  scale_L = 0.94489
+  scale_R = 0.95253
+  L = 0.58969
+  bias = -0.00062
+  sigma_wheel = 0.04100
+  sigma_g = 0.02431
+  sigma_kvh = 0.02207
+
+Gyro = ms25. Final errors after 180 s, mean over 7 segments
+method            position [m]  heading [deg]
+EKF                       5.36           3.79
+Encoder only             31.69          20.17
+Encoder + gyro            4.20           2.82
+mean NEES (expected 3): 9.8   mean NIS (expected 3): 1.4
+distance driven per segment [m]: 142, 235, 145, 173, 238, 192, 244
+
+Gyro = kvh. Final errors after 180 s, mean over 7 segments
+method            position [m]  heading [deg]
+EKF                       3.05           1.98
+Encoder only             31.69          20.17
+Encoder + gyro            2.65           1.34
+mean NEES (expected 3): 9.7   mean NIS (expected 3): 1.3
+distance driven per segment [m]: 142, 235, 145, 173, 238, 192, 244
+
+Whole session (93 min, 6.5 km), MS25 gyro, final errors:
+EKF                      292.2 m        48.9 deg
+Encoder only             815.1 m        45.2 deg
+Encoder + gyro           349.4 m        52.6 deg

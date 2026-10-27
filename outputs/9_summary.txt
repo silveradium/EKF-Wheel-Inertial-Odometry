@@ -1,0 +1,5 @@
+Final errors, mean over 50 Monte Carlo runs
+method            position [m]  heading [deg]
+EKF                     0.0087           0.41
+Encoder only            0.1807          11.82
+Encoder + gyro          0.0089           0.43
