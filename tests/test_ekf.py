@@ -52,17 +52,16 @@ def test_stacked_equals_sequential():
     b = EKF(mu0, Sigma0, cfg)
     b.predict(0.02)
     Q = b.Q
-    b.correct(z[:2], h(b.mu, cfg.r, cfg.L)[:2], Hm[:2], Q[:2, :2])   # encoders
-    b.correct(z[2:], h(b.mu, cfg.r, cfg.L)[2:], Hm[2:], Q[2:, 2:])   # then gyro
+    b.correct(z[:2], h(b.mu, cfg.r, cfg.L)[:2], Hm[:2], Q[:2, :2])
+    b.correct(z[2:], h(b.mu, cfg.r, cfg.L)[2:], Hm[2:], Q[2:, 2:])
 
     assert np.allclose(a.mu, b.mu)
     assert np.allclose(a.Sigma, b.Sigma)
 
 
 def test_zero_noise_matches_truth():
-    # very fine encoders, no gyro noise, perfect track width
     cfg = replace(Config(), cpr=10**7, sigma_wheel=0.0, sigma_g=1e-6, L_true_scale=1.0, T=20.0)
     res = run_once(cfg, 0, simulate_truth(cfg))
     e = pose_error(res['true'], res['mu'])
-    assert np.max(np.hypot(e[:, 0], e[:, 1])) < 0.01   # < 1 cm
-    assert np.max(np.abs(e[:, 2])) < 0.01               # < 0.6 deg
+    assert np.max(np.hypot(e[:, 0], e[:, 1])) < 0.01
+    assert np.max(np.abs(e[:, 2])) < 0.01

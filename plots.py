@@ -1,4 +1,3 @@
-"""All figures. Saved to outputs/."""
 import os
 from dataclasses import replace
 
@@ -26,14 +25,12 @@ def save(fig, name):
 
 
 def ellipse(mean, cov, n_sigma=2):
-    """Points on the n-sigma ellipse of a 2D Gaussian."""
     vals, vecs = np.linalg.eigh(cov)
     a = np.linspace(0, 2 * np.pi, 50)
     circle = np.array([np.cos(a), np.sin(a)])
     return (vecs @ (n_sigma * np.sqrt(vals)[:, None] * circle)).T + mean
 
 
-# 1. trajectory
 def plot_trajectory(res, every=150):
     fig, ax = plt.subplots(figsize=(7, 6))
     ax.plot(res['true'][:, 0], res['true'][:, 1], color=TRUTH, lw=2, label='Truth')
@@ -50,7 +47,6 @@ def plot_trajectory(res, every=150):
     save(fig, '1_trajectory.png')
 
 
-# 2. errors with 3-sigma bounds
 def plot_errors(res):
     e = pose_error(res['true'], res['mu'])
     sd = np.sqrt(np.array([res['Sigma'][:, i, i] for i in range(3)])).T
@@ -66,7 +62,6 @@ def plot_errors(res):
     save(fig, '2_errors.png')
 
 
-# 3. NEES over Monte Carlo runs
 def plot_nees(runs):
     nees = np.mean([nees_pose(r) for r in runs], axis=0)
     lo, hi = chi2_bounds(3, len(runs))
@@ -82,7 +77,6 @@ def plot_nees(runs):
     save(fig, '3_nees.png')
 
 
-# 4. NIS over time (single run)
 def plot_nis(res):
     lo, hi = chi2_bounds(3, 1)
     inside = np.mean((res['nis'][1:] > lo) & (res['nis'][1:] < hi))
@@ -98,7 +92,6 @@ def plot_nis(res):
     save(fig, '4_nis.png')
 
 
-# 5. sensitivity to gyro noise and encoder CPR
 def plot_sensitivity(cfg, truth, seeds):
     def mean_final(c, tr):
         fe = [final_errors(run_once(c, s, tr)) for s in seeds]
@@ -122,7 +115,6 @@ def plot_sensitivity(cfg, truth, seeds):
     save(fig, '5_sensitivity.png')
 
 
-# 6. process noise tuning
 def plot_tuning(cfg, truth, seeds):
     scales = [0.01, 0.1, 1, 10, 100]
     err, nees = [], []
@@ -149,7 +141,6 @@ def plot_tuning(cfg, truth, seeds):
     save(fig, '6_tuning.png')
 
 
-# 8. animation
 def make_animation(res, every=10):
     fig, ax = plt.subplots(figsize=(6, 6))
     tr, mu = res['true'], res['mu']
@@ -169,11 +160,11 @@ def make_animation(res, every=10):
         true_line.set_data(tr[:k + 1, 0], tr[:k + 1, 1])
         ekf_line.set_data(mu[:k + 1, 0], mu[:k + 1, 1])
         x, y, th = mu[k, :3]
-        s = 0.06  # triangle size
+        s = 0.06
         pts = np.array([[s, 0], [-s / 2, s / 2], [-s / 2, -s / 2]])
         Rot = np.array([[np.cos(th), -np.sin(th)], [np.sin(th), np.cos(th)]])
         robot.set_xy(pts @ Rot.T + [x, y])
-        # ellipse is tiny, so it is drawn 10x bigger to be visible
+        # ellipse drawn 10x bigger
         e = ellipse(mu[k, :2], 100 * res['Sigma'][k, :2, :2])
         ell.set_data(e[:, 0], e[:, 1])
         title.set_text(f't = {res["t"][k]:.1f} s')
@@ -186,7 +177,6 @@ def make_animation(res, every=10):
     print('saved 8_animation.gif')
 
 
-# 9. summary table
 def summary_table(runs):
     names = {'mu': 'EKF', 'enc': 'Encoder only', 'enc_gyro': 'Encoder + gyro'}
     fe = [final_errors(r) for r in runs]
@@ -206,7 +196,7 @@ def summary_table(runs):
 def make_all(cfg, script=DEFAULT_SCRIPT, out='outputs'):
     global OUT
     OUT = out
-    truth = simulate_truth(cfg, script)  # same true motion for every run
+    truth = simulate_truth(cfg, script)
     res = run_once(cfg, cfg.seed, truth)
     plot_trajectory(res)
     plot_errors(res)
