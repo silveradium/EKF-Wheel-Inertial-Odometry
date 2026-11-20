@@ -29,6 +29,13 @@ def test_H_matches_finite_difference():
     assert np.allclose(H(cfg.r, cfg.L), numeric_jacobian(lambda m: h(m, cfg.r, cfg.L), mu), atol=1e-6)
 
 
+def test_jacobians_with_bias_state():
+    cfg = Config()
+    mu = np.array([0.3, -0.2, 0.7, 0.15, -0.4, 0.02])
+    assert np.allclose(G(mu, 0.02), numeric_jacobian(lambda m: g(m, 0.02), mu), atol=1e-8)
+    assert np.allclose(H(cfg.r, cfg.L, 6), numeric_jacobian(lambda m: h(m, cfg.r, cfg.L), mu), atol=1e-6)
+
+
 def test_wrap():
     assert np.isclose(wrap(0.5), 0.5)
     assert np.isclose(wrap(3 * np.pi / 2), -np.pi / 2)
@@ -60,8 +67,17 @@ def test_stacked_equals_sequential():
 
 
 def test_zero_noise_matches_truth():
-    cfg = replace(Config(), cpr=10**7, sigma_wheel=0.0, sigma_g=1e-6, L_true_scale=1.0, T=20.0)
+    cfg = replace(Config(), cpr=10**7, sigma_wheel=0.0, sigma_g=1e-6, gyro_bias=0.0,
+                  L_true_scale=1.0, T=20.0)
     res = run_once(cfg, 0, simulate_truth(cfg))
     e = pose_error(res['true'], res['mu'])
     assert np.max(np.hypot(e[:, 0], e[:, 1])) < 0.01
     assert np.max(np.abs(e[:, 2])) < 0.01
+
+
+def test_bias_converges():
+    cfg = replace(Config(), gyro_bias=0.01, L_true_scale=1.0)
+    res = run_once(cfg, 0, simulate_truth(cfg))
+    b, sd = res['mu_b'][-1, 5], np.sqrt(res['Sigma_b'][-1, 5, 5])
+    assert abs(b - cfg.gyro_bias) < 3 * sd
+    assert sd < 0.3 * cfg.gyro_bias

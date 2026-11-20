@@ -13,8 +13,12 @@ Straight-line test (figures go to `trajectory_1/`):
 
     .venv/bin/python run.py straight
 
+Gyro with a constant 0.01 rad/s bias, plus the bias study table (figures go to `outputs_bias/`):
+
+    .venv/bin/python run.py bias
+
 Real data, NCLT session 2012-01-08 (figures and summary go to `nclt_outputs/`).
-Needs `NCLT/groundtruth_2012-01-08.csv` and `wheels.csv`, `ms25.csv`, `kvh.csv`
+Needs `NCLT/groundtruth_2012-01-08.csv` and `wheels.csv`, `ms25.csv`, `kvh.csv`, `gps_rtk.csv`, `gps.csv`
 extracted from `2012-01-08_sen.tar.gz` into `NCLT/2012-01-08/`:
 
     .venv/bin/python nclt.py
@@ -27,7 +31,7 @@ Tests:
 |---|---|
 | config.py | all parameters |
 | sim.py | true robot motion from teleop keys, encoder + gyro sensors, gyro interpolation onto encoder times |
-| ekf.py | the EKF (g, G, h, H, predict, update) |
+| ekf.py | the EKF (g, G, h, H, predict, update, gps update), optional gyro bias state |
 | baselines.py | encoder-only and encoder+gyro dead reckoning |
 | run.py | one run, Monte Carlo runs, NEES |
 | plots.py | all figures |

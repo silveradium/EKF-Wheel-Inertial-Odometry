@@ -13,3 +13,6 @@ NCLT/
 .DS_Store
 .vscode/
 .idea/
+
+# large animations, regenerate with run.py / nclt.py
+*.gif

@@ -97,7 +97,7 @@ def make_sensors(truth, cfg, rng):
     # gyro
     t_gyro = np.arange(cfg.gyro_offset, cfg.T + 1e-9, 1.0 / cfg.gyro_rate)
     gidx = np.round(t_gyro / dt).astype(int)
-    gyro = truth['omega'][gidx] + rng.normal(0, cfg.sigma_g, size=len(t_gyro))
+    gyro = truth['omega'][gidx] + cfg.gyro_bias + rng.normal(0, cfg.sigma_g, size=len(t_gyro))
 
     true = np.column_stack([truth[k][idx] for k in ['x', 'y', 'theta', 'v', 'omega']])
     return dict(t_enc=t_enc, wL=wL, wR=wR, t_gyro=t_gyro, gyro=gyro, true=true)

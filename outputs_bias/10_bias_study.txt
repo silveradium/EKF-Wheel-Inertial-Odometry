@@ -1,0 +1,6 @@
+Bias study, mean over 20 runs: final position [m] / heading [deg], NEES
+case                                     EKF        EKF + bias      Encoder only    Encoder + gyro  NEES EKF  NEES +b
+L error 0%, bias 0.0           0.009 /  0.4     0.054 /  3.3     0.077 /  3.3     0.009 /  0.5       1.5      1.1
+L error 0%, bias 0.01          0.586 / 34.0     0.055 /  3.4     0.077 /  3.3     0.590 / 34.3    1492.7      1.1
+L error 3%, bias 0.0           0.009 /  0.4     0.222 / 13.1     0.207 / 13.2     0.009 /  0.5       1.5      4.8
+L error 3%, bias 0.01          0.587 / 34.1     0.223 / 13.2     0.207 / 13.2     0.590 / 34.3    1498.5      4.9

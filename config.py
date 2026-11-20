@@ -29,14 +29,17 @@ class Config:
     gyro_rate: float = 100.0
     gyro_offset: float = 0.003
     sigma_g: float = 0.01
+    gyro_bias: float = 0.0       # true constant gyro bias (rad/s)
 
     # process noise R
     s_xy: float = 1e-5           # 1e-3 was too pessimistic
     s_th: float = 1e-5
     sigma_a: float = 0.5
     sigma_alpha: float = 2.0
+    sigma_b: float = 1e-4        # bias random walk
 
     sigma0_var: float = 1e-6
+    sigma_b0: float = 0.05       # initial bias std
     seed: int = 0
 
     @property
